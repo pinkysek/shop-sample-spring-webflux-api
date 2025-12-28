@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: shop-sample-api
+  mongodb:
+    uri: mongodb://localhost:27017/shop_sample
+
+
+
