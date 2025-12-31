@@ -25,7 +25,9 @@ import kotlin.math.ceil
 
 @Service
 class ProductServiceImpl(
-    val productRepository: ProductRepository, val mongoTemplate: ReactiveMongoTemplate, val imageService: ImageService
+    private val productRepository: ProductRepository,
+    private val mongoTemplate: ReactiveMongoTemplate,
+    private val imageService: ImageService
 ) : ProductService {
 
     companion object {

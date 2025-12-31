@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/v1/products")
 @Tag(name = "Products", description = "API for managing products.")
-class ProductController(val productService: ProductService) {
+class ProductController(private val productService: ProductService) {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
