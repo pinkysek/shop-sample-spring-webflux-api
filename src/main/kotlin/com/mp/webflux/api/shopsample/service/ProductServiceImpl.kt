@@ -7,6 +7,8 @@ import com.mp.webflux.api.shopsample.dto.ProductResponseDto
 import com.mp.webflux.api.shopsample.exception.ResourceNotFoundException
 import com.mp.webflux.api.shopsample.repository.ProductRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
@@ -45,7 +47,7 @@ class ProductServiceImpl(
             price = dto.price,
             imageUuid = imageUuid.toString()
         )
-        val savedProduct = productRepository.insert(product).awaitSingle()
+        val savedProduct = productRepository.save(product)
 
         imageService.fetchAndSave(imageUuid)
         return savedProduct.toResponseDto()
@@ -54,7 +56,7 @@ class ProductServiceImpl(
     override suspend fun getById(id: String): ProductResponseDto {
         log.info { "Get product with ID: $id" }
 
-        return productRepository.findById(id).awaitSingleOrNull()?.toResponseDto()
+        return productRepository.findById(id)?.toResponseDto()
             ?: throw ResourceNotFoundException("Product with ID: $id was not found")
     }
 
@@ -69,13 +71,20 @@ class ProductServiceImpl(
 
     override suspend fun getAllWithPaging(pageable: Pageable): PagingDto<ProductResponseDto> {
         log.info { "Get all products with pageable: $pageable" }
-        val query = Query().with(pageable)
-        val products = mongoTemplate.find<Product>(query)
-            .asFlow()
-            .map { it.toResponseDto() }
-            .toList()
 
-        val totalCount = mongoTemplate.count<Product>(Query()).awaitSingle()
+        val (products, totalCount) = coroutineScope {
+            val productsDeferred = async {
+                val query = Query().with(pageable)
+                mongoTemplate.find<Product>(query)
+                    .asFlow()
+                    .map { it.toResponseDto() }
+                    .toList()
+            }
+            val countDeferred = async {
+                productRepository.count()
+            }
+            productsDeferred.await() to countDeferred.await()
+        }
         val totalPages = ceil(totalCount.toDouble() / pageable.pageSize.toDouble()).toInt()
 
         return PagingDto(
