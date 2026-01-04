@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.bind.support.WebExchangeBindException
 import java.time.ZonedDateTime
 
+private val log = KotlinLogging.logger {}
+
 @RestControllerAdvice
 class GlobalExceptionHandler {
-
-    private val log = KotlinLogging.logger {}
 
     @ExceptionHandler(ResourceNotFoundException::class)
     @ResponseStatus(HttpStatus.NOT_FOUND)

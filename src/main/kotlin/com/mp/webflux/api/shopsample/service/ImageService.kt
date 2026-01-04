@@ -8,6 +8,8 @@ import org.springframework.web.reactive.function.client.awaitBodyOrNull
 import java.util.*
 import kotlin.random.Random
 
+private val log = KotlinLogging.logger {}
+
 @Service
 class ImageService(
     private val imageWebClient: WebClient
@@ -15,7 +17,6 @@ class ImageService(
         private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
         companion object {
-            private val log = KotlinLogging.logger {}
             private val random = Random
         }
 

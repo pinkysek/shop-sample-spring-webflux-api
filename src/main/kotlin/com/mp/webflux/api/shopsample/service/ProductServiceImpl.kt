@@ -4,6 +4,7 @@ import com.mp.webflux.api.shopsample.document.Product
 import com.mp.webflux.api.shopsample.dto.CreateProductRequestDto
 import com.mp.webflux.api.shopsample.dto.PagingDto
 import com.mp.webflux.api.shopsample.dto.ProductResponseDto
+import com.mp.webflux.api.shopsample.exception.ResourceConflictException
 import com.mp.webflux.api.shopsample.exception.ResourceNotFoundException
 import com.mp.webflux.api.shopsample.repository.ProductRepository
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -13,6 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
 import kotlinx.coroutines.reactor.awaitSingleOrNull
+import org.springframework.dao.DuplicateKeyException
 import org.springframework.data.domain.Pageable
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate
 import org.springframework.data.mongodb.core.find
@@ -23,6 +25,8 @@ import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.math.ceil
 
+private val log = KotlinLogging.logger {}
+
 @Service
 class ProductServiceImpl(
     private val productRepository: ProductRepository,
@@ -31,7 +35,6 @@ class ProductServiceImpl(
 ) : ProductService {
 
     companion object {
-        private val log = KotlinLogging.logger {}
         private const val IMAGE_BASE_URL = "https://www.example.com/api/v1/images"
     }
 
@@ -45,7 +48,12 @@ class ProductServiceImpl(
             price = dto.price,
             imageUuid = imageUuid.toString()
         )
-        val savedProduct = productRepository.save(product)
+
+        val savedProduct = try {
+            productRepository.save(product)
+        } catch (_: DuplicateKeyException) {
+            throw ResourceConflictException("Product with SKU: ${dto.sku} already exists")
+        }
 
         imageService.fetchAndSave(imageUuid)
         return savedProduct.toResponseDto()
