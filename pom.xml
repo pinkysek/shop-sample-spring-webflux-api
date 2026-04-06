@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.5</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -17,8 +17,8 @@
 
 	<properties>
 		<java.version>25</java.version>
-		<kotlin.version>2.3.0</kotlin.version>
-		<springdoc.version>3.0.0</springdoc.version>
+		<kotlin.version>2.3.20</kotlin.version>
+		<springdoc.version>3.0.2</springdoc.version>
 	</properties>
 
 	<dependencies>
@@ -109,13 +109,13 @@
 		<dependency>
 			<groupId>io.github.oshai</groupId>
 			<artifactId>kotlin-logging-jvm</artifactId>
-			<version>7.0.13</version>
+			<version>8.0.01</version>
 		</dependency>
 
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-resolver-dns-native-macos</artifactId>
-			<version>4.2.9.Final</version>
+			<version>4.2.12.Final</version>
 			<classifier>osx-aarch_64</classifier>
 			<scope>runtime</scope>
 		</dependency>
