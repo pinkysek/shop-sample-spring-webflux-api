@@ -115,6 +115,15 @@ HTTP Basic authentication is used. Two users are pre-configured:
    docker compose up --build
    ```
 
+4. To stop the application and remove containers:
+   ```bash
+   docker compose down
+   ```
+   To also remove volumes (deletes all MongoDB data):
+   ```bash
+   docker compose down -v
+   ```
+
 ### Option 2 — Local Maven
 
 1. Make sure MongoDB is running locally on port `27017`.
