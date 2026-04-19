@@ -13,6 +13,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.reactive.asFlow
+import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.data.domain.Pageable
@@ -61,7 +62,6 @@ class ProductServiceImpl(
 
     override suspend fun getById(id: String): ProductResponseDto {
         log.info { "Get product with ID: $id" }
-
         return productRepository.findById(id)?.toResponseDto()
             ?: throw ResourceNotFoundException("Product with ID: $id was not found")
     }
@@ -80,6 +80,7 @@ class ProductServiceImpl(
 
         val (products, totalCount) = coroutineScope {
             val productsDeferred = async {
+                //productRepository.findAllBy(pageable).map { it.toResponseDto() }.toList()
                 val query = Query().with(pageable)
                 mongoTemplate.find<Product>(query)
                     .asFlow()
@@ -87,7 +88,7 @@ class ProductServiceImpl(
                     .toList()
             }
             val countDeferred = async {
-                productRepository.count()
+                mongoTemplate.estimatedCount(Product::class.java).awaitSingle()
             }
             productsDeferred.await() to countDeferred.await()
         }

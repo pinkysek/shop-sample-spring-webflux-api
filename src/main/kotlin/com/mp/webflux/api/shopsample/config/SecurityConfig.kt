@@ -41,7 +41,8 @@ class SecurityConfig {
                 exchanges
                     .pathMatchers("/actuator/health").permitAll()
                     .pathMatchers("/swagger-ui.html", "/swagger-ui/**", "/api-docs/**").permitAll()
-                    .pathMatchers("/api/v1/products/**").authenticated()
+                    .pathMatchers("/api/v1/admin/**").hasRole("ADMIN")
+                    .pathMatchers("/api/v1/products/**").hasAnyRole("ADMIN", "USER")
                     .anyExchange().authenticated()
             }
             .httpBasic { }
