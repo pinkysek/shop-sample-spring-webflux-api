@@ -23,7 +23,7 @@ A reactive REST API built with **Kotlin**, **Spring Boot WebFlux**, and **MongoD
 | Layer       | Technology                                      |
 |-------------|------------------------------------------------|
 | Language    | Kotlin                                          |
-| Framework   | Spring Boot 3 / WebFlux (reactive + coroutines) |
+| Framework   | Spring Boot 4 / WebFlux (reactive + coroutines) |
 | Database    | MongoDB 8                                       |
 | Auth        | HTTP Basic (Spring Security)                    |
 | Docs        | SpringDoc OpenAPI / Swagger UI                  |
@@ -34,14 +34,19 @@ A reactive REST API built with **Kotlin**, **Spring Boot WebFlux**, and **MongoD
 
 ## API Endpoints
 
-### Products — `/api/v1/products`
+### Public — `/api/v1/products`
 
-| Method   | Path                        | Role          | Description                    |
-|----------|-----------------------------|---------------|--------------------------------|
-| `POST`   | `/api/v1/products`          | ADMIN         | Create a new product           |
-| `GET`    | `/api/v1/products/{id}`     | ADMIN / USER  | Get product by ID              |
-| `DELETE` | `/api/v1/products/{id}`     | ADMIN         | Delete product by ID           |
-| `GET`    | `/api/v1/products/paging`   | ADMIN / USER  | Get all products with paging   |
+| Method | Path                      | Role         | Description                  |
+|--------|---------------------------|--------------|------------------------------|
+| `GET`  | `/api/v1/products/{id}`   | ADMIN / USER | Get product by ID            |
+| `GET`  | `/api/v1/products/paging` | ADMIN / USER | Get all products with paging |
+
+### Admin — `/api/v1/admin/products`
+
+| Method   | Path                          | Role  | Description          |
+|----------|-------------------------------|-------|----------------------|
+| `POST`   | `/api/v1/admin/products`      | ADMIN | Create a new product |
+| `DELETE` | `/api/v1/admin/products/{id}` | ADMIN | Delete product by ID |
 
 ### Other
 
@@ -86,7 +91,7 @@ HTTP Basic authentication is used. Two users are pre-configured:
 
 ## Prerequisites
 
-- Java 21+
+- Java 25+
 - Maven (or use the included `./mvnw` wrapper)
 - MongoDB running at `mongodb://localhost:27017/shop_sample`
 - Docker & Docker Compose (optional)
@@ -167,6 +172,15 @@ The API will be available at `http://localhost:8080`.
 # Skip tests during build
 ./mvnw clean package -DskipTests
 ```
+
+### Testing stack
+
+| Layer       | Technology                          |
+|-------------|-------------------------------------|
+| Unit tests  | JUnit 5 + MockK                     |
+| Integration | JUnit 5 + Testcontainers (MongoDB)  |
+
+> Integration tests (`ShopSampleApplicationTests`, `ProductRepositoryTest`) require Docker to be running — Testcontainers spins up a MongoDB container automatically.
 
 ---
 
