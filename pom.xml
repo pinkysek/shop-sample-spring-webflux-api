@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>4.0.5</version>
+		<version>4.1.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 
@@ -18,11 +18,11 @@
 	<properties>
 		<java.version>25</java.version>
 		<kotlin.version>2.3.20</kotlin.version>
-		<springdoc.version>3.0.2</springdoc.version>
-		<mockk.version>1.14.2</mockk.version>
-		<testcontainers.version>2.0.4</testcontainers.version>
-		<kotlin-logging.version>8.0.01</kotlin-logging.version>
-		<netty-dns-macos.version>4.2.12.Final</netty-dns-macos.version>
+		<springdoc.version>3.0.3</springdoc.version>
+		<mockk.version>1.14.11</mockk.version>
+		<testcontainers.version>2.0.5</testcontainers.version>
+		<kotlin-logging.version>8.0.4</kotlin-logging.version>
+		<netty-dns-macos.version>4.2.16.Final</netty-dns-macos.version>
 	</properties>
 
 	<dependencies>
